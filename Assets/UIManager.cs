@@ -3,19 +3,10 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-///  Manages the display and organization of UI windows in the application.
-///  It allows showing, hiding, and retrieving UI windows by their unique identifiers.
-/// </summary>
 public class UIManager : Singleton<UIManager>
 {
-    // List of all UI windows 
     [SerializeField] private List<UIWindow> uiWindows = new List<UIWindow>();
 
-    /// <summary>
-    ///  Shows the UI window with the specified identifier.
-    /// </summary>
-    /// <param name="windowUI"> Window identifier</param>
     public void ShowUI(string windowUI)
     {
         foreach (var window in uiWindows)
@@ -29,10 +20,6 @@ public class UIManager : Singleton<UIManager>
         Debug.LogWarning($"UI Window with name {windowUI} not found.");
     }
 
-    /// <summary>
-    ///  Hides the UI window with the specified identifier.
-    /// </summary>
-    /// <param name="windowUI"> Window identifier</param>
     public void HideUI(string windowUI)
     {
         foreach (var window in uiWindows)
@@ -46,9 +33,6 @@ public class UIManager : Singleton<UIManager>
         Debug.LogWarning($"UI Window with name {windowUI} not found.");
     }
 
-    /// <summary>
-    /// Hides all UI windows.
-    /// </summary>
     public void HideAllUI()
     {
         foreach (var window in uiWindows)
@@ -57,11 +41,6 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    /// <summary>
-    ///  Retrieves the UI window with the specified identifier.
-    /// </summary>
-    /// <param name="windowUI"></param>
-    /// <returns></returns>
     public UIWindow GetUIWindow(string windowUI)
     {
         foreach (var window in uiWindows)
@@ -83,13 +62,12 @@ public class UIManager : Singleton<UIManager>
         UIWindow[] windows = FindObjectsByType<UIWindow>(FindObjectsSortMode.InstanceID);
         uiWindows.AddRange(windows);
     }
-
     #endregion
 }
-
 
 public static class WindowsIDs
 {
     public static string Popup = "PopupUI";
-
+    public static string Menu = "MenuUI";
+    public static string Settings = "SettingsUI";
 }
