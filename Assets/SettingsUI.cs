@@ -3,30 +3,37 @@ using UnityEngine.UI;
 
 public class SettingsUI : UIWindow
 {
-    [SerializeField] private Button _buttonYes;
-    [SerializeField] private Button _buttonNo;
+    [SerializeField] private Button _buttonYes;  // Botón verde
+    [SerializeField] private Button _buttonNo;   // Botón rojo o cerrar
 
     public override void Initialize()
     {
         base.Initialize();
 
+        // Asignar listeners a los botones si existen
         if (_buttonYes != null)
-            _buttonYes.onClick.AddListener(YesClick);
+            _buttonYes.onClick.AddListener(OnYesClick);
 
         if (_buttonNo != null)
-            _buttonNo.onClick.AddListener(NoClick);
+            _buttonNo.onClick.AddListener(OnNoClick);
     }
 
-    private void YesClick()
+    private void OnYesClick()
     {
-        Debug.Log("Yes Clicked Abriendo MenuUI");
+        Debug.Log("Botón Sí presionado dentro de SettingsUI");
+
+        // Por ejemplo, abrir otra ventana (opcional)
+        // UIManager.Instance.ShowUI(WindowsIDs.OtraVentana);
+
+        // Cerrar esta ventana
         UIManager.Instance.HideUI(WindowID);
-        UIManager.Instance.ShowUI(WindowsIDs.Menu);
     }
 
-    private void NoClick()
+    private void OnNoClick()
     {
-        Debug.Log("No Clicked Cerrando SettingsUI");
+        Debug.Log("Botón No presionado dentro de SettingsUI");
+
+        // Solo cerrar la ventana
         UIManager.Instance.HideUI(WindowID);
     }
 }
