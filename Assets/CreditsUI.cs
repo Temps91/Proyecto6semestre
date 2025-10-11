@@ -15,7 +15,6 @@ public class CreditsUI : UIWindow
 
     private void Cerrartodo()
     {
-        Debug.Log("Cerrando todas las ventanas desde CreditsUI");
         UIManager.Instance.HideUI(WindowID);
     }
 }

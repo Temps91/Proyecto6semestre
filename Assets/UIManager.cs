@@ -68,7 +68,7 @@ public class UIManager : Singleton<UIManager>
 public static class WindowsIDs
 {
     public static string Popup = "PopupUI";
-    public static string Menu = "MenuUI";
+    public static string Menu = "ScriptUI";
     public static string Settings = "SettingsUI";
     public static string Credits = "CreditsUI";
 
