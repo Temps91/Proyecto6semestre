@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class MenuUI : UIWindow
 {
-    [SerializeField] private Button _buttonGreen;  // Botón que abrirá SettingsUI
+    [SerializeField] private Button _buttonGreen;
 
     public override void Initialize()
     {
@@ -15,7 +15,6 @@ public class MenuUI : UIWindow
 
     private void OpenSettings()
     {
-        Debug.Log("Botón verde presionado"); // <-- verifica que aparezca
         UIManager.Instance.HideUI(WindowID);
         UIManager.Instance.ShowUI(WindowsIDs.Settings);
     }
