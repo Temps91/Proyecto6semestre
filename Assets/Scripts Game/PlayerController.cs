@@ -3,21 +3,22 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    [Header("Velocidad del jugador")]
     public float speed;
     public float speedInSprint;
-    public GameObject prefabBullet;
-    public Transform shootPoint;
-    public LayerMask enemies;
+    [Header("Cuchillazo del jugador")]
     public GameObject melee;
     private bool meleeOn;
+    [Header("Camaras")]
+    public Camera camApuntar;
+    public Camera camMain;
 
     public void Update()
     {
         Move();
-        ShootAndReload();
         Sprint();
         MeleeKnife();
+        Apuntar();
 
 
     }
@@ -45,25 +46,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ShootAndReload()
-    {
-        Ray ray = new Ray(shootPoint.position, shootPoint.forward);
-        RaycastHit hit;
-        if (Input.GetMouseButton(0))
-        {
-            Debug.Log("disparo");
-            if (Physics.Raycast(ray, out hit, 10f, enemies))
-            {
-                Debug.Log("raycast lanzado");
-            }
-        }
 
-        Debug.DrawRay(shootPoint.position, shootPoint.forward * 10f, Color.red);
-        if (Input.GetKey(KeyCode.R))
-        {
-
-        }
-    }
     public void Sprint()
     {
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -86,6 +69,20 @@ public class PlayerController : MonoBehaviour
         melee.SetActive(false);
         yield return new WaitForSeconds(1.5f);
         meleeOn = false;
+    }
+
+    public void Apuntar()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            camMain.enabled = false;
+            camApuntar.enabled = true;
+        }
+        else
+        {
+            camMain.enabled = true;
+            camApuntar.enabled = false;
+        }
     }
 
 }
