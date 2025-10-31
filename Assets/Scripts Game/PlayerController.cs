@@ -85,4 +85,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<Zone>() != null)
+        {
+            other.gameObject.GetComponent<Zone>().PlayerEntered();
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<Zone>() != null)
+        {
+            other.gameObject.GetComponent<Zone>().PlayerExited();
+        }
+    }
 }
