@@ -3,39 +3,76 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int enemiesIncrement;
-    public int enemyCount;
-    public int currentEnemies;
 
+    [Header("Rondas")]
+    public int baseEnemies = 10;
+    public int enemiesIncrement = 2;
+    public int maxEnemies = 24;
+
+    [Header("Estado actual")]
+    public int currentEnemies;
+    public int enemiesSpawned;
+    public int roundNumber = 1;
 
     private void Awake()
     {
-        // Si ya existe una instancia y no somos nosotros, destruir este objeto
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        // Asignar la instancia
         Instance = this;
-
-        // Hacer que el objeto no se destruya al cambiar de escena
         DontDestroyOnLoad(gameObject);
     }
-    public void EnemyKilled()
+
+    private void Start()
     {
-        enemyCount--;
-        if(enemyCount == 0)
+        StartNewRound();
+    }
+    public void Update()
+    {
+        if (Input.GetKey(KeyCode.K)) 
         {
-            ChangeRound();
+            StartNewRound();
         }
     }
 
-    public void ChangeRound()
+    public void EnemyKilled()
     {
-        enemyCount += enemiesIncrement;
-        currentEnemies = enemyCount;
-        
+        currentEnemies--;
+        if (currentEnemies <= 0)
+        {
+            StartNewRound();
+        }
+    }
+
+    public void StartNewRound()
+    {
+
+        if (roundNumber > 1)
+        {
+            baseEnemies += enemiesIncrement;
+
+        }
+
+        if (baseEnemies > maxEnemies)
+        {
+            baseEnemies = maxEnemies;
+        }
+
+        currentEnemies = baseEnemies;
+        enemiesSpawned = 0;
+        roundNumber++;
+    }
+
+    public bool CanSpawnMore()
+    {
+        return enemiesSpawned < currentEnemies;
+    }
+
+    public void RegisterSpawn()
+    {
+        enemiesSpawned++;
     }
 }
