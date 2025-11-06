@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Inventory : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         if (startWeapon != null)
-            AddWeapon(startWeapon);
+            AddWeaponFromPrefab(startWeapon);
     }
 
     private void Update()
@@ -29,33 +30,84 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public int CurrentSlot => currentSlot;
     public int AddWeapon(GameObject weaponInstance)
     {
-        int slotToUse = (weaponSlots[0] == null) ? 0 : (weaponSlots[1] == null ? 1 : -1);
-
-        if (slotToUse == -1)
+        // Buscar primer slot libre
+        for (int i = 0; i < weaponSlots.Length; i++)
         {
-            return -1;
+            if (weaponSlots[i] == null)
+            {
+                weaponSlots[i] = weaponInstance;
+
+                if (i == currentSlot)
+                {
+                    var weaponBehaviour = weaponInstance.GetComponentInChildren<WeaponBehaviour>();
+                    playerShooting.SetWeapon(weaponBehaviour);
+                    weaponInstance.SetActive(true);
+                }
+                else
+                {
+                    weaponInstance.SetActive(false);
+                }
+
+                return i;
+            }
         }
 
-        weaponSlots[slotToUse] = weaponInstance;
-
-        if (slotToUse == currentSlot)
-        {
-            var weaponBehaviour = weaponInstance.GetComponentInChildren<WeaponBehaviour>();
-            playerShooting.SetWeapon(weaponBehaviour);
-            weaponInstance.SetActive(true);
-        }
-        else
-        {
-            weaponInstance.SetActive(false);
-        }
-        return slotToUse;
+        return -1;
     }
 
-
-    private void EquipWeapon(GameObject newWeaponPrefab, int slotIndex)
+    public int AddWeaponFromPrefab(GameObject newWeaponPrefab)
     {
+        if (newWeaponPrefab == null) return -1;
+
+        // Buscar primer slot libre
+        for (int i = 0; i < weaponSlots.Length; i++)
+        {
+            if (weaponSlots[i] == null)
+            {
+                GameObject weaponInstance = Instantiate(newWeaponPrefab, playerHand);
+                weaponInstance.transform.localPosition = Vector3.zero;
+                weaponInstance.transform.localRotation = Quaternion.identity;
+
+                weaponSlots[i] = weaponInstance;
+
+                var weaponBehaviour = weaponInstance.GetComponentInChildren<WeaponBehaviour>();
+
+                if (i == currentSlot)
+                {
+                    playerShooting.SetWeapon(weaponBehaviour);
+                    weaponInstance.SetActive(true);
+                }
+                else
+                {
+                    weaponInstance.SetActive(false);
+                }
+
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public int AddOrReplaceWeaponFromPrefab(GameObject newWeaponPrefab)
+    {
+        if (newWeaponPrefab == null) return -1;
+
+        int slot = AddWeaponFromPrefab(newWeaponPrefab);
+        if (slot != -1)
+            return slot;
+
+        ReplaceWeaponInSlot(currentSlot, newWeaponPrefab);
+        return currentSlot;
+    }
+
+    public void ReplaceWeaponInSlot(int slotIndex, GameObject newWeaponPrefab)
+    {
+        if (slotIndex < 0 || slotIndex >= weaponSlots.Length) return;
+
         if (weaponSlots[slotIndex] != null)
             Destroy(weaponSlots[slotIndex]);
 
@@ -66,36 +118,26 @@ public class Inventory : MonoBehaviour
         weaponSlots[slotIndex] = weaponInstance;
 
         var weaponBehaviour = weaponInstance.GetComponentInChildren<WeaponBehaviour>();
-
         if (slotIndex == currentSlot)
-        {
             playerShooting.SetWeapon(weaponBehaviour);
-            weaponInstance.SetActive(true);
-        }
-        else
-        {
-            weaponInstance.SetActive(false);
-        }
 
+        weaponInstance.SetActive(slotIndex == currentSlot);
     }
 
     private void ChangeToSlot(int slotIndex)
     {
         if (slotIndex == currentSlot) return;
-        if (weaponSlots[slotIndex] == null)
-        {
-            return;
-        }
+        if (slotIndex < 0 || slotIndex >= weaponSlots.Length) return;
+        if (weaponSlots[slotIndex] == null) return;
 
-        weaponSlots[slotIndex].SetActive(true);
         if (weaponSlots[currentSlot] != null)
             weaponSlots[currentSlot].SetActive(false);
+
+        weaponSlots[slotIndex].SetActive(true);
 
         currentSlot = slotIndex;
 
         var weaponBehaviour = weaponSlots[slotIndex].GetComponentInChildren<WeaponBehaviour>();
         playerShooting.SetWeapon(weaponBehaviour);
-
     }
 }
-

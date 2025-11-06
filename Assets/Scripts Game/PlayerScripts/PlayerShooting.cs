@@ -100,20 +100,48 @@ public class PlayerShooting : MonoBehaviour
     private void EquipWeapon(WeaponBehaviour newWeapon)
     {
         if (currentWeaponModel != null)
-            Destroy(currentWeaponModel);
+        {
+            GameObject possibleModel = currentWeaponModel;
+            if (possibleModel != null)
+                possibleModel.SetActive(false);
+
+            currentWeaponModel = null;
+        }
 
         currentWeapon = newWeapon;
 
-        currentWeapon.ammo = currentWeapon.weaponData.ammo;
-        currentWeapon.currentMagazine = currentWeapon.weaponData.magazineSize;
+        if (currentWeapon != null)
+        {
+            currentWeapon.ammo = currentWeapon.weaponData.ammo;
+            currentWeapon.currentMagazine = currentWeapon.weaponData.magazineSize;
+        }
 
-        if (newWeapon.weaponData.weaponPrefab != null)
+        GameObject modelFromScene = null;
+        if (newWeapon != null && playerHand != null && newWeapon.transform.IsChildOf(playerHand))
+        {
+            Transform t = newWeapon.transform;
+            while (t.parent != null && t.parent != playerHand)
+                t = t.parent;
+            if (t.parent == playerHand)
+                modelFromScene = t.gameObject;
+        }
+
+        if (modelFromScene != null)
+        {
+            currentWeaponModel = modelFromScene;
+            currentWeaponModel.transform.localPosition = Vector3.zero;
+            currentWeaponModel.transform.localRotation = Quaternion.identity;
+            currentWeaponModel.SetActive(true);
+            return;
+        }
+
+        if (newWeapon != null && newWeapon.weaponData != null && newWeapon.weaponData.weaponPrefab != null)
         {
             currentWeaponModel = Instantiate(newWeapon.weaponData.weaponPrefab, playerHand);
             currentWeaponModel.transform.localPosition = Vector3.zero;
             currentWeaponModel.transform.localRotation = Quaternion.identity;
-        }
 
+        }
     }
 }
 

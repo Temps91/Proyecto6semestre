@@ -16,6 +16,11 @@ public class MisteryBoxController : MonoBehaviour
     public GameObject colliderWeapon;
     public GameObject colliderBox;
 
+    public void Start()
+    {
+        ResetBoxState();
+    }
+
     public void OpenMisteryBox()
     {
         if (!IsOpen)
@@ -27,23 +32,39 @@ public class MisteryBoxController : MonoBehaviour
         IsOpen = true;
         colliderBox.SetActive(false);
         yield return new WaitForSeconds(timeRoll);
+
         int randomIndex = Random.Range(0, weaponPrefabs.Length);
         GameObject selectedPrefab = weaponPrefabs[randomIndex];
+
         colliderWeapon.SetActive(true);
         currentWeaponInstance = Instantiate(selectedPrefab, spawnWeaponPrefab.position, spawnWeaponPrefab.rotation, spawnWeaponPrefab);
-        yield return new WaitForSeconds(timeWeaponPick);
-        IsOpen = false;
-    }
 
+        yield return new WaitForSeconds(timeWeaponPick);
+
+        if (currentWeaponInstance != null)
+        {
+            Destroy(currentWeaponInstance);
+            currentWeaponInstance = null;
+        }
+
+        ResetBoxState();
+    }
     public GameObject TakeWeapon()
     {
         if (currentWeaponInstance != null)
         {
             GameObject weaponToGive = currentWeaponInstance;
             currentWeaponInstance = null;
+            ResetBoxState();
             return weaponToGive;
         }
         return null;
+    }
+    private void ResetBoxState()
+    {
+        IsOpen = false;
+        if (colliderBox != null) colliderBox.SetActive(true);
+        if (colliderWeapon != null) colliderWeapon.SetActive(false);
     }
 }
 

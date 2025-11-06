@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6760219729680265105}
   - component: {fileID: -3930520495336406807}
   m_Layer: 0
-  m_Name: Pistol
+  m_Name: B23R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,5 +103,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBehaviour
   weaponData: {fileID: 11400000, guid: 606bf72523d9b854fafd340903efaa1e, type: 2}
-  currentMagazine: 10
+  currentMagazine: 7
   ammo: 100

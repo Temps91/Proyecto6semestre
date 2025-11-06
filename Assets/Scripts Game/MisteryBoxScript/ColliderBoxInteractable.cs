@@ -3,12 +3,12 @@
 public class ColliderBoxInteractable : MonoBehaviour
 {
     public MisteryBoxController controllerBox;
-    public bool playerInRangeWeapon;
+    public bool playerInRangeBox;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerInRangeWeapon = true;
+            playerInRangeBox = true;
         }
     }
 
@@ -16,13 +16,13 @@ public class ColliderBoxInteractable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerInRangeWeapon = false;
+            playerInRangeBox = false;
         }
     }
 
     private void Update()
     {
-        if (playerInRangeWeapon && Input.GetKey(KeyCode.F))
+        if (playerInRangeBox && Input.GetKey(KeyCode.F))
         {
             controllerBox.OpenMisteryBox();
         }
