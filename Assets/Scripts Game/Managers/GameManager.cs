@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("Estado actual")]
     public int currentEnemies;
     public int enemiesSpawned;
+    public int totalEnemiesThisRound;
     public int roundNumber = 1;
 
     private void Awake()
@@ -30,9 +31,10 @@ public class GameManager : MonoBehaviour
     {
         StartNewRound();
     }
+
     public void Update()
     {
-        if (Input.GetKey(KeyCode.K)) 
+        if (Input.GetKey(KeyCode.K))
         {
             StartNewRound();
         }
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
     public void EnemyKilled()
     {
         currentEnemies--;
-        if (currentEnemies <= 0)
+        if (currentEnemies <= 0 && enemiesSpawned >= totalEnemiesThisRound)
         {
             StartNewRound();
         }
@@ -49,11 +51,9 @@ public class GameManager : MonoBehaviour
 
     public void StartNewRound()
     {
-
         if (roundNumber > 1)
         {
             baseEnemies += enemiesIncrement;
-
         }
 
         if (baseEnemies > maxEnemies)
@@ -61,18 +61,20 @@ public class GameManager : MonoBehaviour
             baseEnemies = maxEnemies;
         }
 
-        currentEnemies = baseEnemies;
+        totalEnemiesThisRound = baseEnemies;
         enemiesSpawned = 0;
+        currentEnemies = 0;
         roundNumber++;
     }
 
     public bool CanSpawnMore()
     {
-        return enemiesSpawned < currentEnemies;
+        return enemiesSpawned < totalEnemiesThisRound;
     }
 
     public void RegisterSpawn()
     {
         enemiesSpawned++;
+        currentEnemies++;
     }
 }

@@ -5,25 +5,46 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Velocidad del jugador")]
     public float speed;
+    public float speedCurrent;
     public float speedInSprint;
+    public float speedWithStaminUp;
     [Header("Cuchillazo del jugador")]
     public GameObject melee;
     private bool meleeOn;
     [Header("Camaras")]
     public Camera camApuntar;
     public Camera camMain;
+    [Header("Vida")]
+    public int health;
+    public int healthWithJugger;
+    public int healthCurrent;
+    [Header("Points")]
+    public int points;
+    [Header("Perks")]
+    public bool juggerNog;
+    public bool StaminUp;
 
-    
+
+    private void Start()
+    {
+        juggerNog = false;
+        StaminUp = false;
+        healthCurrent = juggerNog ? healthWithJugger : health;
+    }
 
     public void Update()
     {
         Move();
-        Sprint();
         MeleeKnife();
         Apuntar();
+        LostPlayer();
 
-
+        if (StaminUp)
+        {
+            speed = speedWithStaminUp;
+        }
     }
+
     public void Move()
     {
         if (Input.GetKey(KeyCode.A))
@@ -48,14 +69,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    public void Sprint()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            speed += speedInSprint;
-        }
-    }
     public void MeleeKnife()
     {
         if (Input.GetKeyDown(KeyCode.V) && !meleeOn)
@@ -87,7 +100,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<Zone>() != null)
@@ -101,6 +113,21 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.GetComponent<Zone>().PlayerExited();
         }
+    }
 
+    public void LostPlayer()
+    {
+        if (healthCurrent <= 0)
+        {
+            Debug.Log("Moriste");
+        }
+    }
+
+    public void TakeDamagePlayer(int amount)
+    {
+     
+        healthCurrent -= amount;
+        if (healthCurrent < 0) healthCurrent = 0;
+        LostPlayer();
     }
 }

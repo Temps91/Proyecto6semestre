@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 606cd00cedadfb14787b80fdf1654cbd, type: 2}
+  - {fileID: 2100000, guid: 7266abda2c51abe46864494758e3ac35, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,6 +102,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee2f573ce3855fc48b0cb58caae7249f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponBehaviour
-  weaponData: {fileID: 11400000, guid: 606bf72523d9b854fafd340903efaa1e, type: 2}
+  weaponData: {fileID: 11400000, guid: ffd5c2958e0a7534e9eaecaa9e523150, type: 2}
   currentMagazine: 7
   ammo: 100

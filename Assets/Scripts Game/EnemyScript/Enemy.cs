@@ -1,23 +1,59 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public int healthMax;
+    [Header("Componentes")]
+    public GameManager gameManager;
+    public NavMeshAgent agent;
+    public Transform player;
+
+    [Header("Stats de Vida")]
+    public int healthMax = 10;
     public int healthCurrent;
+    public float speedEnemy = 3.5f;
 
-
-    public void TakeDamage(int cantidad)
+    private void Awake()
     {
-        healthCurrent -= cantidad;
+        healthCurrent = healthMax;
 
-        if (healthCurrent <= 0)
+        if (player == null)
         {
-            Dead();
+            GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+            if (playerGO != null)
+                player = playerGO.transform;
         }
+
+        if (agent == null)
+            agent = GetComponent<NavMeshAgent>();
+
+        if (agent != null)
+        {
+            agent.speed = speedEnemy;
+        }
+
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
     }
-    
-    public void Dead()
+
+    private void Update()
     {
+        if (player == null || agent == null) return;
+
+        agent.SetDestination(player.position);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        healthCurrent -= amount;
+        if (healthCurrent <= 0)
+            Die();
+    }
+
+    private void Die()
+    {
+        gameManager?.EnemyKilled();
         gameObject.SetActive(false);
     }
 }
+
