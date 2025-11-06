@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     public Camera camApuntar;
     public Camera camMain;
 
+    
+
     public void Update()
     {
         Move();
@@ -99,5 +101,6 @@ public class PlayerController : MonoBehaviour
         {
             other.gameObject.GetComponent<Zone>().PlayerExited();
         }
+
     }
 }
