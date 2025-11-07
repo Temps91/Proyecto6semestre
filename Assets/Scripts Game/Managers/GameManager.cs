@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public int iTimer;
     public float timer;
     public TextMeshProUGUI text;
+    public TextMeshProUGUI textRound;
 
     [Header("Rondas")]
     public int baseEnemies = 10;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
         timer += Time.deltaTime;
         iTimer = (int)timer;
         text.text = iTimer.ToString();
+        textRound.text = roundNumber.ToString();
     }
 
     public void EnemyKilled()
