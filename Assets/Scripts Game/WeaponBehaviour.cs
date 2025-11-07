@@ -12,11 +12,6 @@ public class WeaponBehaviour : MonoBehaviour
         {
             currentMagazine = weaponData.magazineSize;
             ammo = weaponData.ammo;
-            Debug.Log($"🔫 {weaponData.name} inicializada con {currentMagazine}/{ammo} balas.");
-        }
-        else
-        {
-            Debug.LogWarning($"⚠️ {name} no tiene ScriptableObject asignado.");
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class PlayerShooting : MonoBehaviour
 {
+    public TextMeshProUGUI ammoCurrentText;
+    public TextMeshProUGUI magazineCurrentText;
     [Header("CurrentWeapon")]
     public WeaponBehaviour currentWeapon;
     public Transform playerHand;
@@ -33,6 +36,9 @@ public class PlayerShooting : MonoBehaviour
             {
             }
         }
+
+        ammoCurrentText.text = currentWeapon.ammo.ToString();
+        magazineCurrentText.text = currentWeapon.currentMagazine.ToString();
     }
 
     private void Shoot()

@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JuggerNog : MonoBehaviour
 {
+
     public PlayerController controller;
     public bool playerEnter;
     private void OnTriggerEnter(Collider other)
@@ -24,6 +26,7 @@ public class JuggerNog : MonoBehaviour
     {
         if (playerEnter && Input.GetKey(KeyCode.F))
         {
+            controller.JuggerNog();
             controller.juggerNog = true;
         }
     }

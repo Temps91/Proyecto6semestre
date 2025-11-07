@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     public GameManager gameManager;
     public NavMeshAgent agent;
     public Transform player;
+    public GameObject attackCollider;
+    public bool playerStay;
 
     [Header("Stats de Vida")]
     public int healthMax = 10;
@@ -50,9 +52,10 @@ public class Enemy : MonoBehaviour
             Die();
     }
 
+
     private void Die()
     {
-        gameManager?.EnemyKilled();
+        gameManager.EnemyKilled();
         gameObject.SetActive(false);
     }
 }

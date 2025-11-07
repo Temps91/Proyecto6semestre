@@ -1,8 +1,12 @@
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public int iTimer;
+    public float timer;
+    public TextMeshProUGUI text;
 
     [Header("Rondas")]
     public int baseEnemies = 10;
@@ -38,6 +42,9 @@ public class GameManager : MonoBehaviour
         {
             StartNewRound();
         }
+        timer += Time.deltaTime;
+        iTimer = (int)timer;
+        text.text = iTimer.ToString();
     }
 
     public void EnemyKilled()

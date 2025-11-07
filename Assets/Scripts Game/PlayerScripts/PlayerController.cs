@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public Image juggerNogImage;
+    public Image staminUpImage;
     [Header("Velocidad del jugador")]
     public float speed;
     public float speedCurrent;
@@ -42,7 +45,15 @@ public class PlayerController : MonoBehaviour
         if (StaminUp)
         {
             speed = speedWithStaminUp;
+            staminUpImage.gameObject.SetActive(true);
         }
+        else if (!StaminUp)
+        {
+            speed = speedCurrent;
+            staminUpImage.gameObject.SetActive(false);
+        }
+
+        Debug.Log("vida actual" + healthCurrent);
     }
 
     public void Move()
@@ -125,9 +136,22 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamagePlayer(int amount)
     {
-     
+        Debug.Log("tomando daño");
         healthCurrent -= amount;
         if (healthCurrent < 0) healthCurrent = 0;
         LostPlayer();
+    }
+    public void JuggerNog()
+    {
+        if (juggerNog)
+        {
+            juggerNogImage.gameObject.SetActive(true);
+            healthCurrent = healthWithJugger;
+        }
+        else if (!juggerNog)
+        {
+            juggerNogImage.gameObject.SetActive(false);
+            healthCurrent = health;
+        }
     }
 }
