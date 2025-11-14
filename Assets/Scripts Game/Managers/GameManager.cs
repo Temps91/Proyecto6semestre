@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public float timer;
     public TextMeshProUGUI text;
     public TextMeshProUGUI textRound;
+    public TextMeshProUGUI textPoints;
 
     [Header("Rondas")]
     public int baseEnemies = 10;
@@ -19,6 +20,10 @@ public class GameManager : MonoBehaviour
     public int enemiesSpawned;
     public int totalEnemiesThisRound;
     public int roundNumber = 1;
+
+    [Header("Points")]
+    public int points;
+    public int totalPointsG;
 
     private void Awake()
     {
@@ -35,6 +40,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartNewRound();
+        points = 0;
     }
 
     public void Update()
@@ -47,6 +53,9 @@ public class GameManager : MonoBehaviour
         iTimer = (int)timer;
         text.text = iTimer.ToString();
         textRound.text = roundNumber.ToString();
+        TotalPoints();
+        textPoints.text = totalPointsG.ToString();
+
     }
 
     public void EnemyKilled()
@@ -85,5 +94,16 @@ public class GameManager : MonoBehaviour
     {
         enemiesSpawned++;
         currentEnemies++;
+    }
+
+    public void PointsAgree(int P)
+    {
+        points += P;
+        TotalPoints();
+
+    }
+    public void TotalPoints()
+    {
+        totalPointsG = points;
     }
 }

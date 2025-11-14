@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         healthCurrent -= amount;
+        gameManager.PointsAgree(10);
         if (healthCurrent <= 0)
             Die();
     }
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        gameManager.PointsAgree(100);
         gameManager.EnemyKilled();
         gameObject.SetActive(false);
     }
