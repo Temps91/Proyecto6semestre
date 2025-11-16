@@ -10,6 +10,10 @@ public class Enemy : MonoBehaviour
     public GameObject attackCollider;
     public bool playerStay;
 
+    [Header("Animación")]
+    public Animator animator;
+    public string attackTrigger = "Attack";
+
     [Header("Stats de Vida")]
     public int healthMax = 10;
     public int healthCurrent;
@@ -48,17 +52,48 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         healthCurrent -= amount;
-        gameManager.PointsAgree(10);
+
         if (healthCurrent <= 0)
             Die();
+        else 
+        {
+            if(gameManager != null)
+                gameManager.PointsAgree(10);
+        }
     }
 
 
     private void Die()
     {
-        gameManager.PointsAgree(100);
+        if (gameManager != null)
+            gameManager.PointsAgree(100);
+
         gameManager.EnemyKilled();
         gameObject.SetActive(false);
+    }
+
+    public void StopMovement()
+    {
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+    }
+
+    public void ResumeMovement()
+    {
+        if (agent != null)
+        {
+            agent.isStopped = false;
+        }
+    }
+    public void PlayAttack()
+    {
+        if (animator != null && !string.IsNullOrEmpty(attackTrigger))
+        {
+            animator.SetTrigger(attackTrigger);
+        }
     }
 }
 

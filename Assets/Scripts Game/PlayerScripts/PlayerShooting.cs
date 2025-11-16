@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class PlayerShooting : MonoBehaviour
 {
+    public Image hitImage;
     public TextMeshProUGUI ammoCurrentText;
     public TextMeshProUGUI magazineCurrentText;
     [Header("CurrentWeapon")]
@@ -49,19 +52,30 @@ public class PlayerShooting : MonoBehaviour
 
         Debug.DrawRay(startPos, direction * currentWeapon.weaponData.range, Color.red, 0.2f);
 
-        if (Physics.Raycast(startPos, direction, out RaycastHit hit, currentWeapon.weaponData.range))
+        RaycastHit[] hits = Physics.RaycastAll(startPos, direction, currentWeapon.weaponData.range);
+        if (hits.Length > 0)
         {
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
-            if (enemy != null)
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+            float maxHitDistance = 0f;
+            foreach (var hit in hits)
             {
-                enemy.TakeDamage(currentWeapon.weaponData.damage);
+                Enemy enemy = hit.collider.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(currentWeapon.weaponData.damage);
+                    StartCoroutine(hitCorrutine());
+                }
+
+                if (hit.distance > maxHitDistance)
+                    maxHitDistance = hit.distance;
             }
-            endPos = hit.point;
+
+            endPos = startPos + direction * maxHitDistance;
         }
 
         if (lineRenderer != null)
             StartCoroutine(DrawRay(startPos, endPos));
-
     }
 
     private IEnumerator DrawRay(Vector3 start, Vector3 end)
@@ -148,6 +162,13 @@ public class PlayerShooting : MonoBehaviour
             currentWeaponModel.transform.localRotation = Quaternion.identity;
 
         }
+    }
+
+    IEnumerator hitCorrutine()
+    {
+        hitImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        hitImage.gameObject.SetActive(false);
     }
 }
 

@@ -1,9 +1,13 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Imagenes")]
+    public Image shieldImage;
+    public Image shieldRevive;
     public Image juggerNogImage;
     public Image staminUpImage;
     [Header("Velocidad del jugador")]
@@ -21,17 +25,22 @@ public class PlayerController : MonoBehaviour
     public int health;
     public int healthWithJugger;
     public int healthCurrent;
+    public int healthShield;
     [Header("Points")]
     public int points;
     [Header("Perks")]
     public bool juggerNog;
     public bool StaminUp;
+    public bool shieldPerk;
+    public bool activeShield;
 
 
     private void Start()
     {
         juggerNog = false;
         StaminUp = false;
+        shieldPerk = false;
+        activeShield = false;
         healthCurrent = juggerNog ? healthWithJugger : health;
     }
 
@@ -54,6 +63,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log("vida actual" + healthCurrent);
+
+        if (healthCurrent <= 1 && shieldPerk)
+        {
+            StartCoroutine(Invulnerability());
+        }
     }
 
     public void Move()
@@ -140,6 +154,7 @@ public class PlayerController : MonoBehaviour
         healthCurrent -= amount;
         if (healthCurrent < 0) healthCurrent = 0;
         LostPlayer();
+        
     }
     public void JuggerNog()
     {
@@ -153,5 +168,30 @@ public class PlayerController : MonoBehaviour
             juggerNogImage.gameObject.SetActive(false);
             healthCurrent = health;
         }
+    }
+
+    public void ShieldRevive()
+    {
+        if (shieldPerk)
+        {
+            shieldImage.gameObject.SetActive(true);
+            
+        }
+        else if (!shieldPerk)
+        {
+            shieldImage.gameObject.SetActive(false);
+        }
+
+    }
+
+    IEnumerator Invulnerability()
+    {
+        activeShield = true;
+        int healthTime;
+        healthTime = healthCurrent;
+        healthCurrent += healthShield;
+        yield return new WaitForSeconds(4);
+        activeShield = false;
+        healthCurrent = healthTime;
     }
 }

@@ -9,6 +9,10 @@ public class EnemySpawner : MonoBehaviour
     [Header("Opciones")]
     public float spawnTime = 2f;
 
+    [Header("Dificultad")]
+    // Incremento porcentual por cada ronda extra (0.2 = +20% por ronda)
+    public float healthMultiplierPerRound = 0.2f;
+
     private bool isSpawning = false;
 
     public void StartSpawning()
@@ -71,6 +75,15 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        Instantiate(prefabEnemy, sp.transform.position, sp.transform.rotation);
+        // Instanciamos y ajustamos la vida según la ronda
+        GameObject go = Instantiate(prefabEnemy, sp.transform.position, sp.transform.rotation);
+        Enemy enemy = go.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            int round = GameManager.Instance != null ? GameManager.Instance.roundNumber : 1;
+            float scale = 1f + healthMultiplierPerRound * (round - 1);
+            enemy.healthMax = Mathf.Max(1, Mathf.RoundToInt(enemy.healthMax * scale));
+            enemy.healthCurrent = enemy.healthMax;
+        }
     }
 }
