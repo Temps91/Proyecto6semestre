@@ -9,9 +9,12 @@ public class EnemySpawner : MonoBehaviour
     [Header("Opciones")]
     public float spawnTime = 2f;
 
+    [Header("Timing")]
+    public float initialSpawnDelay = 3f;
+    public float spawnInterval = 1f;
+
     [Header("Dificultad")]
-    // Incremento porcentual por cada ronda extra (0.2 = +20% por ronda)
-    public float healthMultiplierPerRound = 0.2f;
+    public int healthIncreasePerRound = 2;
 
     private bool isSpawning = false;
 
@@ -26,6 +29,9 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator SpawnZombies()
     {
         isSpawning = true;
+
+        yield return new WaitForSeconds(initialSpawnDelay);
+
         while (GameManager.Instance != null && GameManager.Instance.CanSpawnMore())
         {
             Zone playerZone = null;
@@ -45,7 +51,7 @@ public class EnemySpawner : MonoBehaviour
                 GameManager.Instance.RegisterSpawn();
             }
 
-            yield return new WaitForSeconds(spawnTime);
+            yield return new WaitForSeconds(spawnInterval);
         }
         isSpawning = false;
     }
@@ -75,14 +81,14 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        // Instanciamos y ajustamos la vida según la ronda
         GameObject go = Instantiate(prefabEnemy, sp.transform.position, sp.transform.rotation);
         Enemy enemy = go.GetComponent<Enemy>();
         if (enemy != null)
         {
             int round = GameManager.Instance != null ? GameManager.Instance.roundNumber : 1;
-            float scale = 1f + healthMultiplierPerRound * (round - 1);
-            enemy.healthMax = Mathf.Max(1, Mathf.RoundToInt(enemy.healthMax * scale));
+            int prefabBaseHealth = enemy.healthMax;
+            int newHealth = Mathf.Max(1, prefabBaseHealth + (round - 1) * healthIncreasePerRound);
+            enemy.healthMax = newHealth;
             enemy.healthCurrent = enemy.healthMax;
         }
     }

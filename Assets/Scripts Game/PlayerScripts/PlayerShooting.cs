@@ -19,15 +19,41 @@ public class PlayerShooting : MonoBehaviour
     public LineRenderer lineRenderer;
     public float lineDuration = 0.05f;
 
+    private bool isReloading = false;
+
+    [Header("Reload Rotation")]
+    public bool rotateWeaponOnReload = true;
+    public Vector3 reloadRotationAxis = Vector3.up;
+    public float reloadRotationDegrees = 360f;
+    public bool resetRotationAfterReload = true;
+
+    [Header("Reload Movement")]
+    public bool moveWeaponOnReload = true;
+    public Vector3 reloadMoveOffset = new Vector3(0f, -0.1f, -0.25f);
+    public bool resetPositionAfterReload = true;
+
+    [Range(0f, 1f)]
+    public float easingPower = 0.5f;
+
     private void Update()
     {
         if (currentWeapon == null)
             return;
 
-        Reload();
-        ReloadAuto();
+        if (!isReloading)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                TryStartReload();
 
-        if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
+            if (currentWeapon.currentMagazine <= 0 && currentWeapon.ammo > 0)
+                TryStartReload();
+        }
+
+        bool wantsToFire = currentWeapon.weaponData != null && currentWeapon.weaponData.isAutomatic
+            ? Input.GetMouseButton(0)
+            : Input.GetMouseButtonDown(0);
+
+        if (!isReloading && wantsToFire && Time.time >= nextTimeToFire)
         {
             if (currentWeapon.currentMagazine > 0)
             {
@@ -41,7 +67,95 @@ public class PlayerShooting : MonoBehaviour
         }
 
         ammoCurrentText.text = currentWeapon.ammo.ToString();
-        magazineCurrentText.text = currentWeapon.currentMagazine.ToString();
+        magazineCurrentText.text = isReloading ? "Recargando..." : currentWeapon.currentMagazine.ToString();
+    }
+
+    private void TryStartReload()
+    {
+        if (currentWeapon == null || currentWeapon.weaponData == null) return;
+        if (isReloading) return;
+
+        int neededAmmo = currentWeapon.weaponData.magazineSize - currentWeapon.currentMagazine;
+        if (neededAmmo <= 0) return;
+        if (currentWeapon.ammo <= 0 && !currentWeapon.weaponData.infiniteAmmo) return;
+
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        isReloading = true;
+
+        float reloadDuration = currentWeapon.weaponData.reloadTime;
+
+        if ((rotateWeaponOnReload || moveWeaponOnReload) && currentWeaponModel != null)
+        {
+            Vector3 originalPos = currentWeaponModel.transform.localPosition;
+            Quaternion originalRot = currentWeaponModel.transform.localRotation;
+            Vector3 axis = reloadRotationAxis.normalized;
+            float elapsed = 0f;
+
+            while (elapsed < reloadDuration)
+            {
+                float dt = Time.deltaTime;
+                elapsed += dt;
+                float t = Mathf.Clamp01(elapsed / reloadDuration);
+                float easedT = easingPower <= 0f ? t : Mathf.SmoothStep(0f, 1f, t);
+
+                if (moveWeaponOnReload)
+                {
+                    Vector3 targetPos = originalPos + reloadMoveOffset;
+                    currentWeaponModel.transform.localPosition = Vector3.Lerp(originalPos, targetPos, easedT);
+                }
+
+                if (rotateWeaponOnReload)
+                {
+                    float currentAngle = Mathf.Lerp(0f, reloadRotationDegrees, easedT);
+                    currentWeaponModel.transform.localRotation = originalRot * Quaternion.AngleAxis(currentAngle, axis);
+                }
+
+                yield return null;
+            }
+
+            if (moveWeaponOnReload)
+            {
+                Vector3 finalPos = originalPos + reloadMoveOffset;
+                if (resetPositionAfterReload)
+                    currentWeaponModel.transform.localPosition = originalPos;
+                else
+                    currentWeaponModel.transform.localPosition = finalPos;
+            }
+
+            if (rotateWeaponOnReload)
+            {
+                Quaternion finalRot = originalRot * Quaternion.AngleAxis(reloadRotationDegrees, axis);
+                if (resetRotationAfterReload)
+                    currentWeaponModel.transform.localRotation = originalRot;
+                else
+                    currentWeaponModel.transform.localRotation = finalRot;
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(reloadDuration);
+        }
+
+        int neededAmmo = currentWeapon.weaponData.magazineSize - currentWeapon.currentMagazine;
+        if (neededAmmo > 0)
+        {
+            if (currentWeapon.weaponData.infiniteAmmo)
+            {
+                currentWeapon.currentMagazine = currentWeapon.weaponData.magazineSize;
+            }
+            else
+            {
+                int ammoToLoad = Mathf.Min(neededAmmo, currentWeapon.ammo);
+                currentWeapon.currentMagazine += ammoToLoad;
+                currentWeapon.ammo -= ammoToLoad;
+            }
+        }
+
+        isReloading = false;
     }
 
     private void Shoot()
@@ -85,31 +199,6 @@ public class PlayerShooting : MonoBehaviour
         lineRenderer.SetPosition(1, end);
         yield return new WaitForSeconds(lineDuration);
         lineRenderer.enabled = false;
-    }
-
-    private void Reload()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            int neededAmmo = currentWeapon.weaponData.magazineSize - currentWeapon.currentMagazine;
-            if (neededAmmo <= 0 || currentWeapon.ammo <= 0) return;
-
-            int ammoToLoad = Mathf.Min(neededAmmo, currentWeapon.ammo);
-            currentWeapon.currentMagazine += ammoToLoad;
-            currentWeapon.ammo -= ammoToLoad;
-
-        }
-    }
-
-    private void ReloadAuto()
-    {
-        if (currentWeapon.currentMagazine > 0 || currentWeapon.ammo <= 0) return;
-
-        int neededAmmo = currentWeapon.weaponData.magazineSize;
-        int ammoToLoad = Mathf.Min(neededAmmo, currentWeapon.ammo);
-        currentWeapon.currentMagazine = ammoToLoad;
-        currentWeapon.ammo -= ammoToLoad;
-
     }
 
     public void SetWeapon(WeaponBehaviour weapon)
@@ -160,7 +249,6 @@ public class PlayerShooting : MonoBehaviour
             currentWeaponModel = Instantiate(newWeapon.weaponData.weaponPrefab, playerHand);
             currentWeaponModel.transform.localPosition = Vector3.zero;
             currentWeaponModel.transform.localRotation = Quaternion.identity;
-
         }
     }
 

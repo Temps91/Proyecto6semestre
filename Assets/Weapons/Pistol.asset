@@ -21,3 +21,5 @@ MonoBehaviour:
   infiniteAmmo: 0
   currentMagazine: 10
   weaponPrefab: {fileID: 3329986105517521006, guid: 5fd2361b7c961ad479af05d5d030c2af, type: 3}
+  isAutomatic: 0
+  reloadTime: 1

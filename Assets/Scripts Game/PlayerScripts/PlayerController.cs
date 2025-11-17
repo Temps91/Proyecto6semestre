@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public int healthWithJugger;
     public int healthCurrent;
     public int healthShield;
+    public int healthMax;
+    public int shieldMin;
     [Header("Points")]
     public int points;
     [Header("Perks")]
@@ -41,15 +43,20 @@ public class PlayerController : MonoBehaviour
         StaminUp = false;
         shieldPerk = false;
         activeShield = false;
+        healthMax = healthCurrent;
         healthCurrent = juggerNog ? healthWithJugger : health;
     }
 
     public void Update()
     {
+        ShieldTime();
         Move();
         MeleeKnife();
         Apuntar();
         LostPlayer();
+        RegenerateHealth();
+        ShieldRevive();
+
 
         if (StaminUp)
         {
@@ -64,10 +71,9 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("vida actual" + healthCurrent);
 
-        if (healthCurrent <= 1 && shieldPerk)
-        {
-            StartCoroutine(Invulnerability());
-        }
+
+
+
     }
 
     public void Move()
@@ -145,6 +151,7 @@ public class PlayerController : MonoBehaviour
         if (healthCurrent <= 0)
         {
             Debug.Log("Moriste");
+            this.gameObject.SetActive(false);
         }
     }
 
@@ -162,11 +169,13 @@ public class PlayerController : MonoBehaviour
         {
             juggerNogImage.gameObject.SetActive(true);
             healthCurrent = healthWithJugger;
+            healthMax = healthCurrent;
         }
         else if (!juggerNog)
         {
             juggerNogImage.gameObject.SetActive(false);
             healthCurrent = health;
+            healthMax = healthCurrent;
         }
     }
 
@@ -187,11 +196,34 @@ public class PlayerController : MonoBehaviour
     IEnumerator Invulnerability()
     {
         activeShield = true;
-        int healthTime;
-        healthTime = healthCurrent;
         healthCurrent += healthShield;
         yield return new WaitForSeconds(4);
         activeShield = false;
-        healthCurrent = healthTime;
+        healthCurrent = healthMax;
+        Debug.Log("Escudo desactivado");
+    }
+    public void RegenerateHealth()
+    {
+        if (healthCurrent < healthMax)
+        {
+            Debug.Log("Vida es menor que la vida maxima");
+            StartCoroutine(RegenerateHealthCoroutine());
+        }
+    }
+
+    IEnumerator RegenerateHealthCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+        healthCurrent = healthMax;
+        Debug.Log("la vida de player es de " +  healthCurrent);
+    }
+
+    public void ShieldTime()
+    {
+        if (healthCurrent <= shieldMin && shieldPerk)
+        {
+            Debug.Log("Activando escudo");
+            StartCoroutine(Invulnerability());
+        }
     }
 }

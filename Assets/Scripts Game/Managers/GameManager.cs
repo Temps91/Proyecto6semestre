@@ -83,6 +83,12 @@ public class GameManager : MonoBehaviour
         enemiesSpawned = 0;
         currentEnemies = 0;
         roundNumber++;
+
+        var spawners = FindObjectsOfType<EnemySpawner>();
+        foreach (var s in spawners)
+        {
+            s.StartSpawning();
+        }
     }
 
     public bool CanSpawnMore()

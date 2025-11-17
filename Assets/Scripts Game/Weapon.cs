@@ -13,6 +13,10 @@ public class Weapon : ScriptableObject
     public int currentMagazine;
     public GameObject weaponPrefab;
 
+    public bool isAutomatic = false;
+
+    public float reloadTime = 1.5f;
+
     private void OnEnable()
     {
         currentMagazine = magazineSize;

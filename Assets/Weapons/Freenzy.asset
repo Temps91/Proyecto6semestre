@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00a0be5837fee414291d2255ad2f952a, type: 3}
+  m_Name: Freenzy
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  weaponName: Freenzy
+  damage: 10
+  range: 100
+  fireRate: 10
+  ammo: 100
+  magazineSize: 25
+  infiniteAmmo: 0
+  currentMagazine: 25
+  weaponPrefab: {fileID: 3329986105517521006, guid: d58ce17711f31024880ad991fe9905c0, type: 3}
+  isAutomatic: 1
+  reloadTime: 1
