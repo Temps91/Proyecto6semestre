@@ -1,14 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShieldP : MonoBehaviour
 {
+    public GameObject InteractableShield;
     public PlayerController controller;
+    public GameManager p;
     public bool playerEnter;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerEnter = true;
+            InteractableShield.SetActive(true);
+
         }
     }
     private void OnTriggerExit(Collider other)
@@ -16,16 +21,17 @@ public class ShieldP : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerEnter = false;
+            InteractableShield.SetActive(false);
         }
     }
 
 
     public void Update()
     {
-        if (playerEnter && Input.GetKey(KeyCode.F) && controller.points >= 500)
+        if (playerEnter && Input.GetKey(KeyCode.F) && p.points >= 500)
         {
             Debug.Log("Comprando escudo");
-            controller.points -= 500;
+            p.points -= 500;
             controller.shieldPerk = true;
         }
     }

@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 public class JuggerNog : MonoBehaviour
 {
-
+    public GameObject interactableJuggerNog;
+    public GameManager p;
     public PlayerController controller;
     public bool playerEnter;
     private void OnTriggerEnter(Collider other)
@@ -11,6 +12,7 @@ public class JuggerNog : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerEnter = true;
+            interactableJuggerNog.SetActive(true);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -18,14 +20,16 @@ public class JuggerNog : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerEnter = false;
+            interactableJuggerNog.SetActive(false);
         }
     }
 
 
     public void Update()
     {
-        if (playerEnter && Input.GetKey(KeyCode.F))
+        if (playerEnter && Input.GetKey(KeyCode.F) && p.points >= 2500)
         {
+            p.points -= 2500;
             controller.JuggerNog();
             controller.juggerNog = true;
         }

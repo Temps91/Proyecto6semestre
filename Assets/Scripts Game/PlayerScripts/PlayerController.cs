@@ -184,13 +184,11 @@ public class PlayerController : MonoBehaviour
         if (shieldPerk)
         {
             shieldImage.gameObject.SetActive(true);
-            
         }
         else if (!shieldPerk)
         {
             shieldImage.gameObject.SetActive(false);
         }
-
     }
 
     IEnumerator Invulnerability()

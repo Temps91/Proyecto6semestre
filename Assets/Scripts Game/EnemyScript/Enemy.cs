@@ -3,7 +3,11 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    
+    public bool wasInstaKillActiv;
     [Header("Componentes")]
+    public EnemyTimer instaTimer;
+    public PowerUpManager powerUp;
     public GameManager gameManager;
     public NavMeshAgent agent;
     public Transform player;
@@ -22,12 +26,19 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         healthCurrent = healthMax;
-
+        if (instaTimer == null)
+        {
+            instaTimer = FindAnyObjectByType<EnemyTimer>();
+        }
         if (player == null)
         {
             GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
             if (playerGO != null)
                 player = playerGO.transform;
+        }
+        if (powerUp == null)
+        {
+            powerUp = FindAnyObjectByType<PowerUpManager>();
         }
 
         if (agent == null)
@@ -44,6 +55,17 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (instaTimer.instaKill)
+        {
+            healthCurrent = 1;
+            wasInstaKillActiv = true;
+        }
+        else if (wasInstaKillActiv)
+        {
+            healthCurrent = healthMax;
+            wasInstaKillActiv = false;
+        }
+
         if (player == null || agent == null) return;
 
         agent.SetDestination(player.position);
@@ -65,10 +87,12 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+
         if (gameManager != null)
             gameManager.PointsAgree(100);
 
         gameManager.EnemyKilled();
+        powerUp.AttemptDrop(transform.position);
         gameObject.SetActive(false);
     }
 

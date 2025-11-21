@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public class ColliderWeaponInteractable : MonoBehaviour
 {
+    public TextMeshProUGUI textWeapon;
     public MisteryBoxController controllerBox;
     public Inventory inventory;
     public bool playerInRangeWeapon;
@@ -11,6 +13,7 @@ public class ColliderWeaponInteractable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRangeWeapon = true;
+            textWeapon.gameObject.SetActive(true);
         }
     }
 
@@ -19,6 +22,7 @@ public class ColliderWeaponInteractable : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRangeWeapon = false;
+            textWeapon.gameObject.SetActive(false);
         }
     }
 
@@ -26,6 +30,7 @@ public class ColliderWeaponInteractable : MonoBehaviour
     {
         if (playerInRangeWeapon && Input.GetKeyDown(KeyCode.F))
         {
+            textWeapon.gameObject.SetActive(false);
             GameObject weaponPickup = controllerBox.TakeWeapon();
             if (weaponPickup == null) return;
             WeaponBehaviour pickupWB = weaponPickup.GetComponentInChildren<WeaponBehaviour>();

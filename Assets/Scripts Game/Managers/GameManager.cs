@@ -1,8 +1,21 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private const float DOUBLE_POWER_DURATION = 20f;
+
+    [Header("Double Points PowerUp")]
+    public float timerDoublePower = DOUBLE_POWER_DURATION;
+    public int iTimerDoublePower;
+    public TextMeshProUGUI textDoublePoints;
+    public Image doublePointsUI;
+    public bool doublePointsBool;
+
+    private Coroutine doublePointsTimerRef;
+
     public static GameManager Instance;
     public int iTimer;
     public float timer;
@@ -25,6 +38,7 @@ public class GameManager : MonoBehaviour
     public int points;
     public int totalPointsG;
 
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,22 +55,72 @@ public class GameManager : MonoBehaviour
     {
         StartNewRound();
         points = 0;
+        if (doublePointsUI != null)
+        {
+            doublePointsUI.gameObject.SetActive(false);
+        }
     }
 
     public void Update()
     {
+        if (doublePointsBool)
+        {
+            timerDoublePower -= Time.deltaTime;
+            iTimerDoublePower = Mathf.CeilToInt(timerDoublePower);
+            textDoublePoints.text = iTimerDoublePower.ToString();
+            if (timerDoublePower <= 0f)
+            {
+                DisableDoublePoints();
+            }
+        }
+
         if (Input.GetKey(KeyCode.K))
         {
             StartNewRound();
         }
+
         timer += Time.deltaTime;
         iTimer = (int)timer;
         text.text = iTimer.ToString();
         textRound.text = roundNumber.ToString();
         TotalPoints();
-        textPoints.text = totalPointsG.ToString();
-
+        textPoints.text = points.ToString();
     }
+
+    public void ActivateDoublePoints()
+    {
+        if (doublePointsTimerRef != null)
+        {
+            StopCoroutine(doublePointsTimerRef);
+        }
+
+        timerDoublePower = DOUBLE_POWER_DURATION;
+        doublePointsBool = true;
+        doublePointsUI.gameObject.SetActive(true);
+
+        doublePointsTimerRef = StartCoroutine(DoublePointsTimerCoroutine());
+        Debug.Log("Double Points REINICIADO y activado.");
+    }
+
+    public IEnumerator DoublePointsTimerCoroutine()
+    {
+        yield return new WaitForSeconds(DOUBLE_POWER_DURATION);
+
+        DisableDoublePoints();
+    }
+
+    private void DisableDoublePoints()
+    {
+        doublePointsBool = false;
+        if (doublePointsUI != null)
+        {
+            doublePointsUI.gameObject.SetActive(false);
+        }
+        timerDoublePower = DOUBLE_POWER_DURATION;
+        doublePointsTimerRef = null;
+        Debug.Log("Double Points DESACTIVADO.");
+    }
+
 
     public void EnemyKilled()
     {
@@ -104,10 +168,18 @@ public class GameManager : MonoBehaviour
 
     public void PointsAgree(int P)
     {
-        points += P;
-        TotalPoints();
+        if (doublePointsBool)
+        {
+            points += P * 2;
+        }
+        else
+        {
+            points += P;
+        }
 
+        TotalPoints();
     }
+
     public void TotalPoints()
     {
         totalPointsG = points;
