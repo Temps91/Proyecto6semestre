@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   weaponName: M14
   damage: 30
-  range: 10
+  range: 100
   fireRate: 1
   ammo: 100
   magazineSize: 15
   infiniteAmmo: 0
   currentMagazine: 15
   weaponPrefab: {fileID: 2742434101830113263, guid: 241619439a4cda5428f24364b74caa7c, type: 3}
+  isAutomatic: 0
+  reloadTime: 1.5

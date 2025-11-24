@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   weaponName: B23R
   damage: 30
-  range: 10
+  range: 100
   fireRate: 1
   ammo: 100
   magazineSize: 15
   infiniteAmmo: 0
   currentMagazine: 15
   weaponPrefab: {fileID: 3329986105517521006, guid: 570e2c6d7d701c84780f7ef4806e1a98, type: 3}
+  isAutomatic: 0
+  reloadTime: 1.5

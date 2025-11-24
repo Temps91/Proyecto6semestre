@@ -1286,6 +1286,8 @@ MonoBehaviour:
   weaponPrefabs:
   - {fileID: 3329986105517521006, guid: d58ce17711f31024880ad991fe9905c0, type: 3}
   - {fileID: 3329986105517521006, guid: be7a8d1d5c0ef764388fd6877e8df759, type: 3}
+  - {fileID: 3329986105517521006, guid: f9c30629f4bd2f049bdb98313b486a51, type: 3}
+  - {fileID: 3329986105517521006, guid: 772c114bc00c9a8429ed0e08cf4df640, type: 3}
   spawnWeaponPrefab: {fileID: 188300828}
   timeRoll: 2
   timeWeaponPick: 3

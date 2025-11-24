@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00a0be5837fee414291d2255ad2f952a, type: 3}
-  m_Name: MP5
+  m_Name: Ak-42
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  weaponName: MP5
+  weaponName: Ak-42
   damage: 30
   range: 100
-  fireRate: 20
-  ammo: 180
-  magazineSize: 20
+  fireRate: 10
+  ammo: 240
+  magazineSize: 40
   infiniteAmmo: 0
-  currentMagazine: 20
-  weaponPrefab: {fileID: 3329986105517521006, guid: 772c114bc00c9a8429ed0e08cf4df640, type: 3}
+  currentMagazine: 40
+  weaponPrefab: {fileID: 3329986105517521006, guid: f9c30629f4bd2f049bdb98313b486a51, type: 3}
   isAutomatic: 1
-  reloadTime: 1.2
+  reloadTime: 1.5
