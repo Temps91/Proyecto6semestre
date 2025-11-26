@@ -1,0 +1,52 @@
+# Blender MTL File: 'Sofa_Final.blend'
+# Material Count: 4
+
+newmtl Brick
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump Textures\\Brick_normal.png
+map_Kd Textures\\Brick_albedo.jpg
+
+newmtl Leaf
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures\\leaf.png
+
+newmtl Mat
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump Textures\\None_normal.png
+map_Kd Textures\\None_albedo.jpg
+map_Ns Textures\\None_roughness.jpg
+refl Textures\\None_metallic.jpg
+
+newmtl Matress
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump Textures\\Matress_normal.png
+map_Kd Textures\\Matress_albedo.jpg
+map_Ns Textures\\Matress_roughness.jpg
