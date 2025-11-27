@@ -15,9 +15,13 @@ public class Enemy : MonoBehaviour
     public GameObject attackCollider;
     public bool playerStay;
 
-    [Header("Animación")]
+    [Header("Animacion")]
     public Animator animator;
     public string attackTrigger = "Attack";
+    public string jumpTrigger = "Jump";
+    public string runBool = "Run";
+    public string deathTrigger = "Die";
+
 
     [Header("Stats de Vida")]
     public int healthMax = 10;
@@ -75,6 +79,7 @@ public class Enemy : MonoBehaviour
         if (agent.isOnOffMeshLink)
         {
             agent.speed = slowSpeedWindows;
+            animator.SetTrigger(jumpTrigger);
         }
         else
         {
@@ -104,6 +109,7 @@ public class Enemy : MonoBehaviour
             gameManager.PointsAgree(100);
 
         gameManager.EnemyKilled();
+        animator.SetTrigger(deathTrigger);
         powerUp.AttemptDrop(transform.position);
         gameObject.SetActive(false);
     }
