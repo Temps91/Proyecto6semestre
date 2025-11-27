@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     public int healthMax = 10;
     public int healthCurrent;
     public float speedEnemy = 3.5f;
+    public float slowSpeedWindows;
 
     private void Awake()
     {
@@ -69,6 +71,16 @@ public class Enemy : MonoBehaviour
         if (player == null || agent == null) return;
 
         agent.SetDestination(player.position);
+
+        if (agent.isOnOffMeshLink)
+        {
+            agent.speed = slowSpeedWindows;
+        }
+        else
+        {
+            agent.speed = speedEnemy;
+        }
+
     }
 
     public void TakeDamage(int amount)

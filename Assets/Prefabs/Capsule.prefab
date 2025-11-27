@@ -198,6 +198,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38768626eeeebe74aae69e7bec7c8f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  wasInstaKillActiv: 0
+  instaTimer: {fileID: 0}
+  powerUp: {fileID: 0}
   gameManager: {fileID: 0}
   agent: {fileID: -4206399132951345608}
   player: {fileID: 0}
@@ -207,7 +210,8 @@ MonoBehaviour:
   attackTrigger: Attack
   healthMax: 10
   healthCurrent: 10
-  speedEnemy: 10
+  speedEnemy: 5
+  slowSpeedWindows: 2
 --- !u!195 &-4206399132951345608
 NavMeshAgent:
   m_ObjectHideFlags: 0
