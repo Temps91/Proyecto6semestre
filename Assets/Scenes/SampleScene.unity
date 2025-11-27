@@ -11563,6 +11563,10 @@ PrefabInstance:
       value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: -2928005101730667371, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
@@ -44709,6 +44713,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -2152073188619787321, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: 8446286987522977083, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: 5504175209162537852, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: 7511726033769033256, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: 6200219802984731962, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: -8012946174568320003, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: -4465697247252973772, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
+    - {fileID: 7903446935949964080, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 852f1c8979a92f4409a9cd86f36a0e4b, type: 3}
@@ -46036,6 +46047,10 @@ PrefabInstance:
     - target: {fileID: -7562646645344307505, guid: c1315fa41e72ac94f98e381a8adf7ecf, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c1315fa41e72ac94f98e381a8adf7ecf, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7462785199906445055, guid: c1315fa41e72ac94f98e381a8adf7ecf, type: 3}
       propertyPath: m_StaticEditorFlags
