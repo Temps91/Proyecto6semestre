@@ -30,6 +30,7 @@ public class StaminUp : MonoBehaviour
         {
             p.points -= 2000;
             controller.StaminUp = true;
+            playerEnter = false;
         }
     }
 }

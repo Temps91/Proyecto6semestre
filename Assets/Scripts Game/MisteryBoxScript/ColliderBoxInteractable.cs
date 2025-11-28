@@ -8,6 +8,7 @@ public class ColliderBoxInteractable : MonoBehaviour
     public bool playerInRangeBox;
     public int misteryPoints;
     public GameManager p;
+    public Animator boxAnimator;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

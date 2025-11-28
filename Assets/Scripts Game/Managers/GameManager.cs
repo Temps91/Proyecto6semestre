@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartNewRound();
-        points = 0;
+        points = 10000;
         if (doublePointsUI != null)
         {
             doublePointsUI.gameObject.SetActive(false);

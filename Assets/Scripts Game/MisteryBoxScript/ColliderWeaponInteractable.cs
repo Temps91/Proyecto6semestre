@@ -7,6 +7,7 @@ public class ColliderWeaponInteractable : MonoBehaviour
     public MisteryBoxController controllerBox;
     public Inventory inventory;
     public bool playerInRangeWeapon;
+    public Animator weaponBoxAnim;
 
     private void OnTriggerEnter(Collider other)
     {

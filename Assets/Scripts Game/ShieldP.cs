@@ -33,6 +33,7 @@ public class ShieldP : MonoBehaviour
             Debug.Log("Comprando escudo");
             p.points -= 500;
             controller.shieldPerk = true;
+            playerEnter = false;
         }
     }
 }

@@ -1,26 +1,35 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    private Rigidbody rb;
+    private Vector3 moveDirection; 
+    
+    private Coroutine regenRoutine;
+    private Coroutine shieldRoutine;
+
     [Header("Imagenes")]
     public Image shieldImage;
     public Image shieldRevive;
     public Image juggerNogImage;
     public Image staminUpImage;
+    
     [Header("Velocidad del jugador")]
     public float speed;
     public float speedCurrent;
     public float speedInSprint;
     public float speedWithStaminUp;
+    
     [Header("Cuchillazo del jugador")]
     public GameObject melee;
     private bool meleeOn;
+    
     [Header("Camaras")]
     public Camera camApuntar;
     public Camera camMain;
+    
     [Header("Vida")]
     public int health;
     public int healthWithJugger;
@@ -28,8 +37,10 @@ public class PlayerController : MonoBehaviour
     public int healthShield;
     public int healthMax;
     public int shieldMin;
+    
     [Header("Points")]
     public int points;
+    
     [Header("Perks")]
     public bool juggerNog;
     public bool StaminUp;
@@ -39,25 +50,35 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            Debug.LogError("PlayerController requiere un componente Rigidbody en el GameObject.");
+        }
+        
         juggerNog = false;
         StaminUp = false;
         shieldPerk = false;
         activeShield = false;
-        healthMax = healthCurrent;
-        healthCurrent = juggerNog ? healthWithJugger : health;
+        speedCurrent = speed; 
+        
+        healthMax = health; 
+        healthCurrent = health; 
     }
 
     public void Update()
     {
+        HandleInput();
+        
         ShieldTime();
-        Move();
+        RegenerateHealth();
+        
         MeleeKnife();
         Apuntar();
         LostPlayer();
-        RegenerateHealth();
         ShieldRevive();
-
-
+        JuggerNog();
+        
         if (StaminUp)
         {
             speed = speedWithStaminUp;
@@ -70,35 +91,50 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log("vida actual" + healthCurrent);
+    }
+    
+    private void FixedUpdate()
+    {
+        // 🟢 APLICAMOS MOVIMIENTO CON RIGIDBODY.VELOCITY
+        if (rb == null) return;
+        
+        if (moveDirection.magnitude > 0)
+        {
+            Vector3 finalVelocity = moveDirection * speed;
+            
+            // 🛑 CORREGIDO: Usar rb.velocity.y
+            finalVelocity.y = rb.linearVelocity.y; 
 
-
-
-
+            // 🛑 CORREGIDO: Usar rb.velocity
+            rb.linearVelocity = finalVelocity;
+        }
+        else
+        {
+             // Si no hay input, detenemos el movimiento horizontal
+             // 🛑 CORREGIDO: Usar rb.velocity
+             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
+    }
+    
+    public void HandleInput()
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        
+        // Calculamos la dirección relativa a la rotación del jugador
+        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+        
+        if (moveDirection.magnitude > 1)
+        {
+            moveDirection.Normalize();
+        }
     }
 
     public void Move()
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            Vector3 Izquierda = new Vector3(-1, 0, 0);
-            transform.Translate(Izquierda * speed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            Vector3 Derecha = new Vector3(1, 0, 0);
-            transform.Translate(Derecha * speed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            Vector3 Adelante = new Vector3(0, 0, 1);
-            transform.Translate(Adelante * speed * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            Vector3 Atras = new Vector3(0, 0, -1);
-            transform.Translate(Atras * speed * Time.deltaTime);
-        }
+        // Movimiento gestionado por FixedUpdate/Rigidbody.
     }
+
 
     public void MeleeKnife()
     {
@@ -107,8 +143,9 @@ public class PlayerController : MonoBehaviour
             melee.SetActive(true);
             meleeOn = true;
             StartCoroutine(Cuchillazo());
-        }  
+        }  
     }
+    
     IEnumerator Cuchillazo()
     {
         yield return new WaitForSeconds(0.5f);
@@ -138,6 +175,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.GetComponent<Zone>().PlayerEntered();
         }
     }
+    
     private void OnTriggerExit(Collider other)
     {
         if (other.GetComponent<Zone>() != null)
@@ -157,25 +195,35 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamagePlayer(int amount)
     {
-        Debug.Log("tomando da�o");
+        Debug.Log("tomando daño");
         healthCurrent -= amount;
+        
+        if (regenRoutine != null)
+        {
+            StopCoroutine(regenRoutine);
+            regenRoutine = null;
+            Debug.Log("Regeneración interrumpida por daño.");
+        }
+        
         if (healthCurrent < 0) healthCurrent = 0;
         LostPlayer();
-        
     }
+    
     public void JuggerNog()
     {
         if (juggerNog)
         {
             juggerNogImage.gameObject.SetActive(true);
-            healthCurrent = healthWithJugger;
-            healthMax = healthCurrent;
+            healthMax = healthWithJugger;
         }
         else if (!juggerNog)
         {
             juggerNogImage.gameObject.SetActive(false);
-            healthCurrent = health;
-            healthMax = healthCurrent;
+            healthMax = health;
+            if (healthCurrent > healthMax)
+            {
+                healthCurrent = healthMax;
+            }
         }
     }
 
@@ -190,38 +238,55 @@ public class PlayerController : MonoBehaviour
             shieldImage.gameObject.SetActive(false);
         }
     }
+    
+    public void ShieldTime()
+    {
+        if (healthCurrent <= shieldMin && shieldPerk && shieldRoutine == null && !activeShield)
+        {
+            Debug.Log("Activando escudo");
+            shieldRoutine = StartCoroutine(Invulnerability());
+        }
+    }
 
     IEnumerator Invulnerability()
     {
         activeShield = true;
-        healthCurrent += healthShield;
+        healthCurrent += healthShield; 
+        shieldRevive.gameObject.SetActive(true); 
+
         yield return new WaitForSeconds(4);
+
         activeShield = false;
-        healthCurrent = healthMax;
+        shieldRevive.gameObject.SetActive(false); 
+        
+        if (healthCurrent > healthMax)
+        {
+             healthCurrent = healthMax;
+        }
+        
         Debug.Log("Escudo desactivado");
+        shieldRoutine = null; 
     }
+    
     public void RegenerateHealth()
     {
-        if (healthCurrent < healthMax)
+        if (healthCurrent < healthMax && regenRoutine == null)
         {
-            Debug.Log("Vida es menor que la vida maxima");
-            StartCoroutine(RegenerateHealthCoroutine());
+            Debug.Log("Vida es menor que la vida maxima, iniciando regeneración.");
+            regenRoutine = StartCoroutine(RegenerateHealthCoroutine());
         }
     }
 
     IEnumerator RegenerateHealthCoroutine()
     {
         yield return new WaitForSeconds(3);
-        healthCurrent = healthMax;
-        Debug.Log("la vida de player es de " +  healthCurrent);
-    }
-
-    public void ShieldTime()
-    {
-        if (healthCurrent <= shieldMin && shieldPerk)
+        
+        if (healthCurrent < healthMax) 
         {
-            Debug.Log("Activando escudo");
-            StartCoroutine(Invulnerability());
+            healthCurrent = healthMax;
+            Debug.Log("La vida de player es de " +  healthCurrent);
         }
+        
+        regenRoutine = null; 
     }
 }
