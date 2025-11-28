@@ -6,7 +6,6 @@ using Unity.VisualScripting;
 
 public class PlayerShooting : MonoBehaviour
 {
-    // Esta variable será activada por el script MaxAmmoPowerUp.cs
     public bool maxAmmo;
     public Image maxAmmoImage;
     [Header("Text")]
@@ -51,11 +50,10 @@ public class PlayerShooting : MonoBehaviour
             StartCoroutine(MaxAmmoAc());
             
         }
-        // ----------------------------------------------------
 
         if (!isReloading)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (SimpleInput.GetButtonDown("Reload"))
                 TryStartReload();
 
             if (currentWeapon.currentMagazine <= 0 && currentWeapon.ammo > 0)
@@ -63,8 +61,8 @@ public class PlayerShooting : MonoBehaviour
         }
 
         bool wantsToFire = currentWeapon.weaponData != null && currentWeapon.weaponData.isAutomatic
-            ? Input.GetMouseButton(0)
-            : Input.GetMouseButtonDown(0);
+            ? SimpleInput.GetButton("Fire1")
+            : SimpleInput.GetButtonDown("Fire1");
 
         if (!isReloading && wantsToFire && Time.time >= nextTimeToFire)
         {
@@ -76,42 +74,36 @@ public class PlayerShooting : MonoBehaviour
             }
             else
             {
-                // Manejar sonido de click vacío aquí si es necesario
             }
         }
 
         ammoCurrentText.text = currentWeapon.ammo.ToString();
-        magazineCurrentText.text = isReloading ? "Recargando..." : currentWeapon.currentMagazine.ToString();
+        magazineCurrentText.text = isReloading ? "Recargando" : currentWeapon.currentMagazine.ToString();
     }
 
     public void ApplyMaxAmmo()
     {
-        // Obtener la referencia al inventario (asumiendo que está en el mismo GameObject)
         Inventory inventory = GetComponent<Inventory>();
 
         if (inventory == null)
         {
-            Debug.LogError("Error: PlayerShooting requiere el script Inventory en el mismo GameObject.");
-            maxAmmo = false; // Desactivar para evitar un bucle de error
+            Debug.LogError("Error PlayerShooting requiere el script Inventory en el mismo GameObject");
+            maxAmmo = false;
             return;
         }
 
-        // Iteramos sobre todos los slots de armas del inventario
         for (int i = 0; i < inventory.weaponSlots.Length; i++)
         {
             GameObject weaponSlot = inventory.weaponSlots[i];
 
             if (weaponSlot != null)
             {
-                // Obtener el WeaponBehaviour de la instancia del arma
                 WeaponBehaviour weaponBehaviour = weaponSlot.GetComponentInChildren<WeaponBehaviour>();
 
                 if (weaponBehaviour != null && weaponBehaviour.weaponData != null)
                 {
-                    // Recargar la munición de reserva (ammo) al valor máximo del ScriptableObject
                     weaponBehaviour.ammo = weaponBehaviour.weaponData.ammo;
 
-                    // Recargar el cargador actual (currentMagazine) al máximo
                     weaponBehaviour.currentMagazine = weaponBehaviour.weaponData.magazineSize;
                 }
             }
@@ -120,7 +112,7 @@ public class PlayerShooting : MonoBehaviour
         maxAmmo = false;
         Debug.Log("Max Ammo Recargado en todas las armas!");
     }
-    // ----------------------------------------------------
+
 
     private void TryStartReload()
     {
@@ -226,7 +218,6 @@ public class PlayerShooting : MonoBehaviour
             float maxHitDistance = 0f;
             foreach (var hit in hits)
             {
-                // Asume que tienes un script Enemy
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {

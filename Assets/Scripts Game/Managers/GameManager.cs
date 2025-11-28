@@ -99,7 +99,6 @@ public class GameManager : MonoBehaviour
         doublePointsUI.gameObject.SetActive(true);
 
         doublePointsTimerRef = StartCoroutine(DoublePointsTimerCoroutine());
-        Debug.Log("Double Points REINICIADO y activado.");
     }
 
     public IEnumerator DoublePointsTimerCoroutine()
@@ -118,7 +117,6 @@ public class GameManager : MonoBehaviour
         }
         timerDoublePower = DOUBLE_POWER_DURATION;
         doublePointsTimerRef = null;
-        Debug.Log("Double Points DESACTIVADO.");
     }
 
 

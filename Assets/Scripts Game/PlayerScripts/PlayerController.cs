@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         if (rb == null)
         {
-            Debug.LogError("PlayerController requiere un componente Rigidbody en el GameObject.");
+            Debug.LogError("PlayerController requiere un componente Rigidbody en el GameObject");
         }
         
         juggerNog = false;
@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
         RegenerateHealth();
         
         MeleeKnife();
-        Apuntar();
         LostPlayer();
         ShieldRevive();
         JuggerNog();
@@ -95,33 +94,27 @@ public class PlayerController : MonoBehaviour
     
     private void FixedUpdate()
     {
-        // 🟢 APLICAMOS MOVIMIENTO CON RIGIDBODY.VELOCITY
         if (rb == null) return;
         
         if (moveDirection.magnitude > 0)
         {
             Vector3 finalVelocity = moveDirection * speed;
             
-            // 🛑 CORREGIDO: Usar rb.velocity.y
             finalVelocity.y = rb.linearVelocity.y; 
 
-            // 🛑 CORREGIDO: Usar rb.velocity
             rb.linearVelocity = finalVelocity;
         }
         else
         {
-             // Si no hay input, detenemos el movimiento horizontal
-             // 🛑 CORREGIDO: Usar rb.velocity
              rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
     }
     
     public void HandleInput()
     {
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
+        float horizontalInput = SimpleInput.GetAxisRaw("Horizontal");
+        float verticalInput = SimpleInput.GetAxisRaw("Vertical");
         
-        // Calculamos la dirección relativa a la rotación del jugador
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
         
         if (moveDirection.magnitude > 1)
@@ -130,15 +123,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Move()
-    {
-        // Movimiento gestionado por FixedUpdate/Rigidbody.
-    }
 
 
     public void MeleeKnife()
     {
-        if (Input.GetKeyDown(KeyCode.V) && !meleeOn)
+        if (SimpleInput.GetButtonDown("Knife") && !meleeOn)
         {
             melee.SetActive(true);
             meleeOn = true;
@@ -154,19 +143,6 @@ public class PlayerController : MonoBehaviour
         meleeOn = false;
     }
 
-    public void Apuntar()
-    {
-        if (Input.GetMouseButton(1))
-        {
-            camMain.enabled = false;
-            camApuntar.enabled = true;
-        }
-        else
-        {
-            camMain.enabled = true;
-            camApuntar.enabled = false;
-        }
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -202,7 +178,6 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(regenRoutine);
             regenRoutine = null;
-            Debug.Log("Regeneración interrumpida por daño.");
         }
         
         if (healthCurrent < 0) healthCurrent = 0;
@@ -272,7 +247,7 @@ public class PlayerController : MonoBehaviour
     {
         if (healthCurrent < healthMax && regenRoutine == null)
         {
-            Debug.Log("Vida es menor que la vida maxima, iniciando regeneración.");
+            Debug.Log("Vida es menor que la vida maxima, iniciando regeneracion");
             regenRoutine = StartCoroutine(RegenerateHealthCoroutine());
         }
     }

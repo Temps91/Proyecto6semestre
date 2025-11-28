@@ -20,11 +20,11 @@ public class Inventory : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (SimpleInput.GetButtonDown("Gun1"))
         {
             ChangeToSlot(0);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetButtonDown("Gun2"))
         {
             ChangeToSlot(1);
         }
@@ -33,7 +33,7 @@ public class Inventory : MonoBehaviour
     public int CurrentSlot => currentSlot;
     public int AddWeapon(GameObject weaponInstance)
     {
-        // Buscar primer slot libre
+
         for (int i = 0; i < weaponSlots.Length; i++)
         {
             if (weaponSlots[i] == null)
@@ -62,7 +62,6 @@ public class Inventory : MonoBehaviour
     {
         if (newWeaponPrefab == null) return -1;
 
-        // Buscar primer slot libre
         for (int i = 0; i < weaponSlots.Length; i++)
         {
             if (weaponSlots[i] == null)

@@ -9,6 +9,7 @@ public class ColliderBoxInteractable : MonoBehaviour
     public int misteryPoints;
     public GameManager p;
     public Animator boxAnimator;
+    bool interact;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -29,7 +30,8 @@ public class ColliderBoxInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRangeBox && Input.GetKey(KeyCode.F) && p.points >= misteryPoints)
+        interact = SimpleInput.GetButton("Interact");
+        if (playerInRangeBox && interact && p.points >= misteryPoints)
         {
             p.points -= misteryPoints;
             controllerBox.OpenMisteryBox();

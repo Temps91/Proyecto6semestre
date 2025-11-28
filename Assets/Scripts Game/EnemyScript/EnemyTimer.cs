@@ -47,7 +47,7 @@ public class EnemyTimer : MonoBehaviour
         instaKillImage.gameObject.SetActive(true);
 
         instaKillTimerRef = StartCoroutine(InstaKillActiveCoroutine());
-        Debug.Log("Insta Kill REINICIADO y activado.");
+        Debug.Log("Insta Kill REINICIADO y activado");
     }
 
     private IEnumerator InstaKillActiveCoroutine()
@@ -66,6 +66,6 @@ public class EnemyTimer : MonoBehaviour
         }
         timerInstaPower = INSTA_KILL_DURATION;
         instaKillTimerRef = null;
-        Debug.Log("Insta Kill DESACTIVADO.");
+        Debug.Log("Insta Kill DESACTIVADO");
     }
 }

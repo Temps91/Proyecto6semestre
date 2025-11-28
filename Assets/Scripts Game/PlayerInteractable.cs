@@ -12,7 +12,7 @@ public class PlayerInteractable : MonoBehaviour
         {
             currentBox = box;
             playerInside = true;
-            Debug.Log("Jugador cerca de la caja.");
+            Debug.Log("Jugador cerca de la caja");
         }
     }
 
@@ -22,7 +22,7 @@ public class PlayerInteractable : MonoBehaviour
         {
             playerInside = false;
             currentBox = null;
-            Debug.Log("Jugador se alejó de la caja.");
+            Debug.Log("Jugador se alejó de la caja");
         }
     }
 
@@ -33,7 +33,7 @@ public class PlayerInteractable : MonoBehaviour
             if (currentBox != null && !currentBox.IsOpen)
             {
                 currentBox.OpenMisteryBox();
-                Debug.Log("Abriendo la caja...");
+                Debug.Log("Abriendo la caja");
             }
         }
     }

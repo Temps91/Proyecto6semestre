@@ -8,6 +8,7 @@ public class JuggerNog : MonoBehaviour
     public PlayerController controller;
     public bool playerEnter;
     public bool canBuy;
+    bool interact;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -28,7 +29,8 @@ public class JuggerNog : MonoBehaviour
 
     public void Update()
     {
-        if (playerEnter && Input.GetKeyUp(KeyCode.F) && p.points >= 2500)
+        interact = SimpleInput.GetButton("Interact");
+        if (playerEnter && interact && p.points >= 2500)
         {
             p.points -= 2500;
             controller.JuggerNog();
