@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
   weaponName: Pistol
-  damage: 1
+  damage: 5
   range: 100
   fireRate: 1
   ammo: 100
@@ -21,5 +21,5 @@ MonoBehaviour:
   infiniteAmmo: 0
   currentMagazine: 10
   weaponPrefab: {fileID: 3329986105517521006, guid: 5fd2361b7c961ad479af05d5d030c2af, type: 3}
-  isAutomatic: 0
+  isAutomatic: 1
   reloadTime: 1

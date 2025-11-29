@@ -7,6 +7,7 @@ public class ShieldP : MonoBehaviour
     public PlayerController controller;
     public GameManager p;
     public bool playerEnter;
+    bool interact;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -28,7 +29,8 @@ public class ShieldP : MonoBehaviour
 
     public void Update()
     {
-        if (playerEnter && Input.GetKey(KeyCode.F) && p.points >= 500)
+        interact = SimpleInput.GetButtonDown("Interact");
+        if (playerEnter && interact && p.points >= 500)
         {
             Debug.Log("Comprando escudo");
             p.points -= 500;

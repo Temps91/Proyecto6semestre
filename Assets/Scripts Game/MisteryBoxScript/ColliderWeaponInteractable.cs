@@ -8,7 +8,7 @@ public class ColliderWeaponInteractable : MonoBehaviour
     public Inventory inventory;
     public bool playerInRangeWeapon;
     public Animator weaponBoxAnim;
-
+    bool interact;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -29,7 +29,8 @@ public class ColliderWeaponInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRangeWeapon && Input.GetKeyDown(KeyCode.F))
+        interact = SimpleInput.GetButtonDown("Interact");
+        if (playerInRangeWeapon && interact)
         {
             textWeapon.gameObject.SetActive(false);
             GameObject weaponPickup = controllerBox.TakeWeapon();
