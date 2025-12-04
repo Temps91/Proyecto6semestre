@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI text;
     public TextMeshProUGUI textRound;
     public TextMeshProUGUI textPoints;
+    public TextMeshProUGUI textPointsScore;
+    public TextMeshProUGUI textKillsScore;
+    public int enemyKill;
 
     [Header("Rondas")]
     public int baseEnemies = 10;
@@ -85,6 +88,8 @@ public class GameManager : MonoBehaviour
         textRound.text = roundNumber.ToString();
         TotalPoints();
         textPoints.text = points.ToString();
+        textPointsScore.text = points.ToString();
+        textKillsScore.text = points.ToString();
     }
 
     public void ActivateDoublePoints()
@@ -123,6 +128,7 @@ public class GameManager : MonoBehaviour
     public void EnemyKilled()
     {
         currentEnemies--;
+        enemyKill += 1;
         if (currentEnemies <= 0 && enemiesSpawned >= totalEnemiesThisRound)
         {
             StartNewRound();

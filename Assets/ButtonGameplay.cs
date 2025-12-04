@@ -7,14 +7,18 @@ public class ButtonGameplay : MonoBehaviour
 
     private void Start()
     {
-        if (_buttonGameplay != null)
-        {
-            _buttonGameplay.onClick.AddListener(OpenScriptUI);
-        }
     }
 
     private void OpenScriptUI()
     {
         UIManager.Instance.ShowUI(WindowsIDs.Menu);
+    }
+
+    private void OnEnable()
+    {
+        if (_buttonGameplay != null)
+        {
+            _buttonGameplay.onClick.AddListener(OpenScriptUI);
+        }
     }
 }

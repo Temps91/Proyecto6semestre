@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -165,7 +166,7 @@ public class PlayerController : MonoBehaviour
         if (healthCurrent <= 0)
         {
             Debug.Log("Moriste");
-            this.gameObject.SetActive(false);
+            SceneManager.LoadScene("SampleScene");
         }
     }
 

@@ -7,8 +7,20 @@ public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private List<UIWindow> uiWindows = new List<UIWindow>();
 
+
+    public void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+    private void RefreshWindows()
+    {
+        uiWindows.Clear();
+        uiWindows.AddRange(FindObjectsByType<UIWindow>(FindObjectsSortMode.InstanceID));
+    }
+
     public void ShowUI(string windowUI)
     {
+        RefreshWindows();
         foreach (var window in uiWindows)
         {
             if (window.WindowID == windowUI)
@@ -19,6 +31,7 @@ public class UIManager : Singleton<UIManager>
         }
         Debug.LogWarning($"UI Window with name {windowUI} not found.");
     }
+
 
     public void HideUI(string windowUI)
     {
